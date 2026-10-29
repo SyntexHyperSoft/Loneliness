@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Проверьте свои знания в VPN и серфинге</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050507;
+  --text: #ffffff;
+  --muted: #9a9aa5;
+  --glass: rgba(20, 20, 26, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --correct: #00e676;
+  --wrong: #ff1744;
+  --g1: #ffffff;
+  --g2: #7a7a85;
+  --g3: #cfcfd8;
+  --g4: #3a3a45;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== ФОН ===== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(255,255,255,0.07) 0%, transparent 40%),
+    radial-gradient(circle at 85% 25%, rgba(140,140,160,0.09) 0%, transparent 45%),
+    radial-gradient(circle at 50% 95%, rgba(255,255,255,0.05) 0%, transparent 50%);
+  animation: bgPulse 14s ease-in-out infinite alternate;
+  z-index: -3;
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 25%, rgba(255,255,255,0.035) 50%, transparent 75%);
+  background-size: 300% 300%;
+  animation: shimmer 9s linear infinite;
+  z-index: -2;
+  pointer-events: none;
+}
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(circle at 50% 50%, black 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 0%, transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+  animation: gridMove 30s linear infinite;
+}
+@keyframes gridMove {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(60px, 60px); }
+}
+
+@keyframes bgPulse {
+  0% { transform: scale(1) translate(0,0); opacity: 0.85; }
+  50% { transform: scale(1.08) translate(-12px, 12px); opacity: 1; }
+  100% { transform: scale(1) translate(0,0); opacity: 0.85; }
+}
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+/* ===== КОНТЕЙНЕР ===== */
+.app {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  border-radius: 26px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.07);
+  padding: 30px 26px;
+  position: relative;
+  overflow: hidden;
+  animation: panelIn 0.8s cubic-bezier(0.16,1,0.3,1) both;
+}
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent 40%, transparent 60%, rgba(255,255,255,0.15));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: borderShine 6s linear infinite;
+  background-size: 300% 300%;
+}
+@keyframes borderShine {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(35px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ===== ГРАДИЕНТНЫЙ ТЕКСТ ===== */
+.grad {
+  background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 25%, var(--g1) 50%, var(--g2) 75%, var(--g1) 100%);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradMove 7s linear infinite;
+}
+@keyframes gradMove {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 400% 50%; }
+}
+.grad-fast {
+  background: linear-gradient(135deg, #fff 0%, #a0a0b0 30%, #fff 60%, #a0a0b0 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradMove 4s linear infinite;
+}
+
+/* ===== ЗАГОЛОВКИ ===== */
+h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(1.3rem, 5vw, 2.1rem);
+  font-weight: 900;
+  text-align: center;
+  line-height: 1.25;
+  margin-bottom: 14px;
+  letter-spacing: -0.5px;
+}
+h2 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(1.2rem, 4.5vw, 1.8rem);
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--muted);
+  font-size: clamp(0.8rem, 2.4vw, 0.95rem);
+  margin-bottom: 28px;
+  font-weight: 400;
+  line-height: 1.6;
+  font-family: 'Manrope', sans-serif;
+}
+
+/* ===== КНОПКИ ===== */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+  padding: 17px 28px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 16px;
+  background: linear-gradient(145deg, #2a2a30, #121216);
+  color: #fff;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
+  background-size: 250% 100%;
+  animation: btnShine 3.2s linear infinite;
+  z-index: -1;
+}
+@keyframes btnShine {
+  0% { background-position: 200% 0; }
+  100% { background-position: -100% 0; }
+}
+.btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,0.45);
+  box-shadow: 0 8px 28px rgba(255,255,255,0.1), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.btn:active { transform: translateY(1px) scale(0.98); }
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  max-width: 260px;
+  font-size: 0.8rem;
+  padding: 13px 22px;
+  margin-top: 22px;
+  letter-spacing: 1px;
+}
+.btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+/* ===== ПРОГРЕСС ===== */
+.progress-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #fff, #7a7a85, #fff);
+  background-size: 200% 100%;
+  animation: progressShine 2.5s linear infinite;
+  border-radius: 3px;
+  transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
+  box-shadow: 0 0 14px rgba(255,255,255,0.4);
+}
+@keyframes progressShine {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ===== ЗАГОЛОВОК ВОПРОСА ===== */
+.q-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-bottom: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.q-header span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.q-header svg { width: 14px; height: 14px; }
+
+.q-text {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(0.98rem, 3.3vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.45;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #ffffff, #a0a0b0, #ffffff);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeSlide 0.5s cubic-bezier(0.16,1,0.3,1) both, gradMove 8s linear infinite;
+}
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== ВАРИАНТЫ ===== */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 16px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  font-size: clamp(0.82rem, 2.5vw, 0.92rem);
+  line-height: 1.45;
+  transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+  animation: fadeSlide 0.5s cubic-bezier(0.16,1,0.3,1) both;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Manrope', sans-serif;
+  min-height: 62px;
+}
+.option::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.07) 50%, transparent 60%);
+  background-size: 250% 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.option:hover:not(.disabled)::after { opacity: 1; animation: btnShine 1.6s linear infinite; }
+
+.option:hover:not(.disabled) {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.3);
+  transform: translateX(6px);
+}
+.option.disabled { cursor: default; }
+.option.correct {
+  background: linear-gradient(135deg, rgba(0,230,118,0.18), rgba(0,230,118,0.05));
+  border-color: var(--correct);
+  box-shadow: 0 0 22px rgba(0,230,118,0.25);
+  animation: correctPulse 0.6s ease;
+}
+@keyframes correctPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+.option.wrong {
+  background: linear-gradient(135deg, rgba(255,23,68,0.18), rgba(255,23,68,0.05));
+  border-color: var(--wrong);
+  box-shadow: 0 0 22px rgba(255,23,68,0.25);
+}
+
+.opt-prefix {
+  font-weight: 800;
+  color: var(--muted);
+  min-width: 26px;
+  flex-shrink: 0;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.85em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.opt-prefix svg { width: 20px; height: 20px; }
+.option.correct .opt-prefix { color: var(--correct); }
+.option.wrong .opt-prefix { color: var(--wrong); }
+
+/* ===== ПОЯСНЕНИЕ ===== */
+.explanation {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border-left: 3px solid transparent;
+  border-image: linear-gradient(180deg, #fff, #7a7a85, #fff) 1;
+  border-radius: 0 12px 12px 0;
+  font-size: 0.83rem;
+  color: #cfcfd8;
+  line-height: 1.6;
+  display: none;
+  animation: fadeSlide 0.45s cubic-bezier(0.16,1,0.3,1) both;
+  font-family: 'Manrope', sans-serif;
+  position: relative;
+}
+.explanation strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  font-family: 'Space Grotesk', sans-serif;
+  background: linear-gradient(135deg, #fff, #a0a0b0, #fff);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradMove 5s linear infinite;
+}
+.explanation strong svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+/* ===== РЕЗУЛЬТАТ ===== */
+.result-screen { text-align: center; }
+.result-score {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(2.8rem, 13vw, 5.2rem);
+  font-weight: 900;
+  margin: 16px 0 8px;
+  background: linear-gradient(135deg, #fff 0%, #7a7a85 50%, #fff 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradMove 5s linear infinite;
+  letter-spacing: -2px;
+}
+.result-rank {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(1.1rem, 5vw, 1.7rem);
+  font-weight: 800;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #fff, #a0a0b0, #fff);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradMove 6s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.result-rank svg { width: 32px; height: 32px; }
+.result-sub {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 20px;
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.review-list {
+  text-align: left;
+  max-height: 55vh;
+  overflow-y: auto;
+  margin-top: 20px;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+.review-list::-webkit-scrollbar { width: 5px; }
+.review-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+.review-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  animation: fadeSlide 0.4s ease both;
+  font-family: 'Manrope', sans-serif;
+  transition: all 0.3s;
+}
+.review-item:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.15);
+}
+.review-q {
+  font-weight: 700;
+  margin-bottom: 6px;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  background: linear-gradient(135deg, #fff, #a0a0b0, #fff);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradMove 8s linear infinite;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.review-q svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 3px; }
+.review-a { margin-bottom: 3px; display: flex; align-items: center; gap: 6px; font-family: 'Manrope', sans-serif; }
+.review-a svg { width: 14px; height: 14px; flex-shrink: 0; }
+.review-a.correct { color: var(--correct); }
+.review-a.wrong { color: var(--wrong); }
+.review-exp {
+  color: var(--muted);
+  font-size: 0.76rem;
+  margin-top: 8px;
+  font-style: italic;
+  display: flex;
+  gap: 6px;
+  line-height: 1.5;
+}
+.review-exp svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; }
+
+.hidden { display: none !important; }
+
+/* ===== ИКОНКИ-ГРАДИЕНТЫ ===== */
+.svg-grad-1 { filter: drop-shadow(0 0 6px rgba(255,255,255,0.4)); }
+.svg-grad-2 { filter: drop-shadow(0 0 6px rgba(140,140,180,0.5)); }
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.85; }
+}
+.icon-pulse { animation: iconPulse 3s ease-in-out infinite; }
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.icon-float { animation: iconFloat 3.5s ease-in-out infinite; }
+
+@keyframes iconSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.icon-spin { animation: iconSpin 8s linear infinite; }
+
+@media (max-width: 480px) {
+  .glass { padding: 22px 18px; border-radius: 22px; }
+  .option { padding: 13px 14px; min-height: 58px; }
+}
+
+/* ===== QUADRO / LONELINESS-INSPIRED CINEMATIC UI UPGRADE ===== */
+:root {
+  --bg:#07080b; --glass:rgba(15,17,22,.76); --glass-border:rgba(255,255,255,.11);
+  --muted:#9297a3; --correct:#58f0b1; --wrong:#ff667d;
+}
+html { scroll-behavior:smooth; }
+body { background:#07080b; isolation:isolate; }
+body::before {
+  background:
+    radial-gradient(ellipse at 18% 12%,rgba(111,129,170,.17),transparent 38%),
+    radial-gradient(ellipse at 84% 24%,rgba(100,108,130,.13),transparent 42%),
+    radial-gradient(ellipse at 50% 100%,rgba(255,255,255,.055),transparent 48%);
+  animation:bgPulse 18s ease-in-out infinite alternate;
+}
+body::after { opacity:.55; }
+.bg-grid { z-index:0; opacity:.75; }
+.app { position:relative; z-index:2; max-width:900px; padding:clamp(14px,3vw,30px); }
+.glass {
+  background:linear-gradient(145deg,rgba(23,25,32,.84),rgba(9,10,14,.84));
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:clamp(22px,4vw,32px);
+  padding:clamp(24px,5vw,44px);
+  box-shadow:0 30px 100px rgba(0,0,0,.62),inset 0 1px 0 rgba(255,255,255,.09),0 0 55px rgba(150,160,190,.045);
+  backdrop-filter:blur(28px) saturate(135%);
+  -webkit-backdrop-filter:blur(28px) saturate(135%);
+  animation:panelIn .85s cubic-bezier(.16,1,.3,1) both;
+}
+.glass::before {
+  background:linear-gradient(120deg,rgba(255,255,255,.28),transparent 24%,transparent 68%,rgba(180,190,220,.17));
+  background-size:250% 250%;
+  animation:borderShine 9s linear infinite;
+}
+h1,h2,.q-text,.result-score,.result-rank { letter-spacing:-.045em; }
+h1 { font-size:clamp(1.45rem,5vw,2.35rem); line-height:1.3; }
+.subtitle { max-width:620px; margin-left:auto; margin-right:auto; }
+.grad,.grad-fast,.q-text,.result-score,.result-rank,.review-q {
+  background-image:linear-gradient(110deg,#fff 0%,#aeb6c8 24%,#fff 47%,#7c879d 70%,#fff 100%);
+  background-size:280% 100%;
+}
+.btn {
+  border-radius:17px;
+  background:linear-gradient(145deg,rgba(255,255,255,.17),rgba(255,255,255,.045));
+  border-color:rgba(255,255,255,.2);
+  box-shadow:0 10px 30px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.12);
+  transition:transform .3s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .3s,background .3s;
+}
+.btn:hover { transform:translateY(-3px); border-color:rgba(255,255,255,.48); box-shadow:0 15px 35px rgba(0,0,0,.36),0 0 28px rgba(210,220,255,.09); }
+.btn-secondary { background:rgba(255,255,255,.035); }
+.option {
+  background:linear-gradient(115deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+  border-color:rgba(255,255,255,.105); border-radius:16px; min-height:64px;
+  transition:transform .28s cubic-bezier(.16,1,.3,1),background .28s,border-color .28s,box-shadow .28s;
+}
+.option:hover:not(.disabled) { transform:translateX(5px); background:rgba(255,255,255,.085); border-color:rgba(255,255,255,.32); box-shadow:0 8px 25px rgba(0,0,0,.2); }
+.progress-wrap { height:5px; border-radius:99px; background:rgba(255,255,255,.09); }
+.progress-fill { border-radius:99px; background:linear-gradient(90deg,#fff,#9daac4,#fff); box-shadow:0 0 18px rgba(210,220,255,.4); }
+.explanation { border-radius:0 15px 15px 0; background:linear-gradient(130deg,rgba(255,255,255,.075),rgba(255,255,255,.025)); }
+.review-item { border-radius:15px; }
+button:focus-visible,.option:focus-visible { outline:2px solid rgba(230,237,255,.8); outline-offset:3px; }
+#ambientCanvas { position:fixed; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; opacity:.42; }
+@media(max-width:520px) {
+  .app { justify-content:flex-start; padding:14px 12px max(18px,env(safe-area-inset-bottom)); }
+  .glass { padding:24px 18px; border-radius:23px; }
+  .option { min-height:58px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; transition-duration:.01ms!important; }
+}
+
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<canvas id="ambientCanvas" aria-hidden="true"></canvas>
+
+<div class="app">
+  <!-- START -->
+  <div id="startScreen" class="glass">
+    <h1 class="grad">Проверьте свои знания<br>в VPN и серфинге</h1>
+    <p class="subtitle">Тест на знание протоколов VLESS, REALITY, XHTTP, TLS, XTLS, gRPC, Hysteria2 и сетевой безопасности. 100 вопросов с подробными пояснениями.</p>
+    <button class="btn" onclick="startQuiz()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="url(#gradBtn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <defs>
+          <linearGradient id="gradBtn" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fff"/>
+            <stop offset="50%" stop-color="#7a7a85"/>
+            <stop offset="100%" stop-color="#fff"/>
+          </linearGradient>
+        </defs>
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+      Пройти
+    </button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quizScreen" class="glass hidden">
+    <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="q-header">
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="url(#gradI1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="gradI1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#fff"/>
+              <stop offset="100%" stop-color="#7a7a85"/>
+            </linearGradient>
+          </defs>
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span id="qCounter">Вопрос 1 / 100</span>
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="url(#gradI2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="gradI2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#fff"/>
+              <stop offset="100%" stop-color="#7a7a85"/>
+            </linearGradient>
+          </defs>
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        <span id="scoreDisplay">Баллы: 0</span>
+      </span>
+    </div>
+    <div class="q-text" id="qText"></div>
+    <div class="options" id="options"></div>
+    <div class="explanation" id="explanation">
+      <strong>
+        <svg viewBox="0 0 24 24" fill="none" stroke="url(#gradI3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="gradI3" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#fff"/>
+              <stop offset="100%" stop-color="#a0a0b0"/>
+            </linearGradient>
+          </defs>
+          <path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>
+        </svg>
+        Пояснение
+      </strong>
+      <span id="expText"></span>
+    </div>
+    <button class="btn hidden" id="nextBtn" onclick="nextQuestion()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="url(#gradBtn2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <defs>
+          <linearGradient id="gradBtn2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fff"/>
+            <stop offset="100%" stop-color="#7a7a85"/>
+          </linearGradient>
+        </defs>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+      Далее
+    </button>
+  </div>
+
+  <!-- RESULT -->
+  <div id="resultScreen" class="glass hidden result-screen">
+    <h2 class="grad">Тест завершён!</h2>
+    <div class="result-score" id="finalScore">0/100</div>
+    <div class="result-rank" id="finalRank">
+      <svg viewBox="0 0 24 24" fill="none" stroke="url(#gradRank)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <defs>
+          <linearGradient id="gradRank" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fff"/>
+            <stop offset="50%" stop-color="#7a7a85"/>
+            <stop offset="100%" stop-color="#fff"/>
+          </linearGradient>
+        </defs>
+        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+        <path d="M4 22h16"/>
+        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+      </svg>
+      <span id="finalRankText">Оценка</span>
+    </div>
+    <div class="result-sub">Разбор всех ответов ниже</div>
+    <div class="review-list" id="reviewList"></div>
+    <button class="btn btn-secondary" onclick="location.reload()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="url(#gradBtn3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <defs>
+          <linearGradient id="gradBtn3" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fff"/>
+            <stop offset="100%" stop-color="#7a7a85"/>
+          </linearGradient>
+        </defs>
+        <polyline points="1 4 1 10 7 10"/>
+        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+      </svg>
+      Пройти заново
+    </button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   100 УНИКАЛЬНЫХ ВОПРОСОВ
+   ============================================================ */
+const RAW_QUESTIONS = [
+  { q:"Для чего нужен VPN?", o:["Для ускорения загрузки сайтов","Для шифрования трафика и смены IP","Для удаления вирусов с устройства","Для увеличения объёма трафика","Для резервного копирования данных"], c:1, e:"VPN создаёт зашифрованный туннель между устройством и сервером. Трафик идёт через удалённый сервер, скрывая ваш реальный IP-адрес от сайтов и провайдера." },
+  { q:"Как работает VPN?", o:["Удаляет вирусы с устройства","Сжимает трафик для ускорения","Перенаправляет трафик через сервер","Блокирует рекламу на сайтах","Сохраняет пароли в хранилище"], c:2, e:"VPN-клиент устанавливает соединение с VPN-сервером. Весь исходящий трафик шифруется и идёт через этот сервер. Сайты видят IP-адрес сервера, а не ваш." },
+  { q:"Чем отличается HTTPS от HTTP?", o:["HTTPS работает быстрее HTTP","HTTPS использует шифрование","HTTP безопаснее HTTPS","HTTPS работает только с почтой","HTTP не поддерживает картинки"], c:1, e:"HTTP передаёт данные в открытом виде, их может перехватить злоумышленник. HTTPS добавляет шифрование SSL/TLS, обеспечивая конфиденциальность и целостность." },
+  { q:"Чем опасен HTTP?", o:["Трафик не шифруется и перехватывается","Он заражает компьютер вирусами","Он замедляет работу интернета","Он удаляет файлы с устройства","Он блокирует доступ к сайтам"], c:0, e:"При HTTP пароли, сообщения и данные карт передаются открыто. Злоумышленник в той же сети Wi-Fi может перехватить и прочитать их." },
+  { q:"Чем отличается XHTTP от HTTP?", o:["XHTTP быстрее обычного HTTP","XHTTP — транспорт для маскировки","XHTTP — протокол передачи файлов","XHTTP — система доменных имён","XHTTP — антивирусная программа"], c:1, e:"XHTTP — не версия HTTP, а транспортный протокол в Xray-core. Он упаковывает VPN-трафик в HTTP-запросы с браузерными заголовками, имитируя веб-сёрфинг." },
+  { q:"Чем отличается XHTTP от TLS?", o:["XHTTP шифрует данные, TLS — нет","TLS работает только с VPN","XHTTP — транспорт, TLS — шифрование","XHTTP быстрее TLS в десять раз","TLS — разновидность XHTTP"], c:2, e:"XHTTP и TLS работают на разных уровнях. TLS шифрует данные, а XHTTP определяет способ передачи потока, маскируя его под обычный веб." },
+  { q:"Что такое REALITY?", o:["Тип VPN-сервера для игр","Маскировка под реальный сайт","Программа для скачивания","Антивирусная база данных","Метод сжатия трафика"], c:1, e:"REALITY заимствует TLS-сертификат у реального сайта. DPI видит легитимное TLS-соединение и не может отличить VPN от обычного посещения сайта." },
+  { q:"Чем отличается VLESS от VMess?", o:["VLESS быстрее за счёт UDP","VMess безопаснее VLESS","VLESS легче и без шифрования","VLESS работает только на Windows","VMess не поддерживает маскировку"], c:2, e:"VLESS — облегчённый протокол, убравший встроенное шифрование и аутентификацию. Эти задачи переложены на транспортный уровень TLS или REALITY." },
+  { q:"Что такое DPI?", o:["Глубокий анализ пакетов","Динамический интерфейс","Инициатива защиты данных","Цифровой перехватчик","Интеграция прямого прокси"], c:0, e:"DPI — технология анализа и блокировки трафика на основе его содержимого, а не только заголовков. Используется провайдерами для цензуры." },
+  { q:"Что такое uTLS?", o:["Улучшенная версия TLS","Имитация отпечатков браузеров","Протокол передачи файлов","Тип VPN-туннеля","Метод сжатия данных"], c:1, e:"uTLS позволяет клиенту подделывать свой TLS-отпечаток (ClientHello) под отпечаток Chrome или Firefox, чтобы DPI не отличал VPN от браузера." },
+  { q:"Что такое XTLS?", o:["Расширение TLS без двойного шифрования","Новый тип VPN-сервера","Протокол для онлайн-игр","Антивирусная технология","Система доменных имён"], c:0, e:"XTLS позволяет избежать двойного шифрования TLS-in-TLS, повышая производительность и снижая нагрузку на процессор." },
+  { q:"Чем отличается TCP от UDP?", o:["TCP гарантирует доставку данных","UDP гарантирует доставку данных","TCP работает быстрее UDP","UDP используется только в играх","TCP не поддерживает шифрование"], c:0, e:"TCP устанавливает соединение и подтверждает получение каждого пакета. UDP не гарантирует доставку, но быстрее — используется для стриминга, игр и VoIP." },
+  { q:"Что такое DNS?", o:["Программа для скачивания","Система доменных имён","Протокол шифрования","Тип VPN-туннеля","Антивирусная утилита"], c:1, e:"DNS — телефонная книга интернета. Когда вы вводите сайт, DNS находит его IP-адрес, чтобы браузер мог подключиться к серверу." },
+  { q:"Чем опасен публичный Wi-Fi?", o:["Трафик могут перехватить","Он всегда медленный","Он удаляет данные","Он требует оплаты","Он не работает без VPN"], c:0, e:"В открытых сетях данные часто передаются без шифрования. Злоумышленник может перехватить пароли и сообщения. Используйте VPN и HTTPS." },
+  { q:"Что такое мультиплексирование Mux?", o:["Увеличение скорости в десять раз","Объединение соединений в одно","Тип шифрования данных","Метод сжатия видео","Протокол передачи файлов"], c:1, e:"Mux объединяет несколько логических соединений в одно физическое, снижая накладные расходы и задержки при установке новых соединений." },
+  { q:"Что такое Trojan?", o:["Вирус для кражи паролей","Протокол под HTTPS","Тип VPN-сервера","Антивирусная программа","Метод сжатия данных"], c:1, e:"Trojan маскирует трафик под обычный HTTPS. Без правильного пароля подключившийся увидит обычный сайт-заглушку." },
+  { q:"Что такое Hysteria2?", o:["Протокол на базе QUIC","Тип VPN для игр","Антивирусная утилита","Метод шифрования диска","Система доменных имён"], c:0, e:"Hysteria2 — высокоскоростной протокол поверх QUIC (UDP). Отлично работает в нестабильных сетях и обходит DPI, так как UDP реже блокируется." },
+  { q:"Что такое WebSocket?", o:["Протокол для почты","Постоянное двустороннее соединение","Тип шифрования данных","Метод сжатия данных","Система управления базами"], c:1, e:"WebSocket обеспечивает постоянное соединение между клиентом и сервером. Часто используется в VPN для маскировки под обычное взаимодействие браузера." },
+  { q:"Что такое Split Tunneling?", o:["Разделение VPN на два сервера","Часть трафика через VPN","Использование двух VPN сразу","Метод сжатия трафика","Тип шифрования данных"], c:1, e:"Split Tunneling позволяет направлять через VPN только определённые приложения или сайты, а остальной трафик пускать напрямую. Это экономит ресурсы." },
+  { q:"Что такое CDN в контексте VPN?", o:["Тип VPN-протокола","Сеть для маскировки IP","Антивирусная программа","Метод шифрования","Система доменных имён"], c:1, e:"CDN — сеть серверов по всему миру. В VPN её используют, чтобы скрыть реальный IP сервера за IP-адресами CDN, например Cloudflare." },
+  { q:"Что такое TLS-in-TLS?", o:["Двойное шифрование TLS","Тип VPN-туннеля","Метод сжатия данных","Антивирусная технология","Протокол передачи файлов"], c:0, e:"TLS-in-TLS — ситуация, когда TLS-трафик VPN дополнительно шифруется TLS-транспортом. Это создаёт избыточную нагрузку, которую решает XTLS." },
+  { q:"Чем отличается XHTTP от gRPC?", o:["gRPC быстрее XHTTP","XHTTP лучше имитирует HTTP","XHTTP работает только с UDP","gRPC не поддерживает шифрование","XHTTP — то же самое, что gRPC"], c:1, e:"gRPC работает в один поток и часто режется DPI по сигнатурам. XHTTP имитирует обычные HTTP-запросы так, что системы анализа видят обычную загрузку контента." },
+  { q:"Что такое Shadowsocks?", o:["Протокол для обхода блокировок","Тип VPN-сервера","Антивирусная программа","Метод сжатия данных","Система доменных имён"], c:0, e:"Shadowsocks — прокси-протокол, шифрующий трафик. Часто используется для обхода цензуры, хотя формально не является VPN." },
+  { q:"Что такое утечка DNS?", o:["Запросы идут через провайдера","VPN-сервер перестаёт работать","Данные шифруются дважды","IP-адрес меняется на другой","Скорость интернета падает"], c:0, e:"Утечка DNS — запросы на преобразование доменных имён идут через провайдера, а не через VPN-туннель. Это раскрывает историю посещений." },
+  { q:"Чем отличается XHTTP от HTTP/2?", o:["HTTP/2 быстрее XHTTP","XHTTP — транспорт Xray","XHTTP работает только с HTTP/1.1","HTTP/2 не поддерживает шифрование","XHTTP — надстройка над HTTP/2"], c:1, e:"XHTTP — транспортный метод в Xray, HTTP/2 — версия протокола HTTP. XHTTP может использовать HTTP/2 или HTTP/3 как способ доставки данных." },
+  { q:"Что такое SNI?", o:["Указание имени сервера","Безопасный сетевой интерфейс","Идентификатор системного узла","Простая сетевая интеграция","Индекс серверного узла"], c:0, e:"SNI передаётся в открытом виде при TLS-рукопожатии и указывает, к какому сайту подключается клиент. DPI может использовать SNI для блокировок." },
+  { q:"Что такое ECH?", o:["Шифрование TLS-рукопожатия","Тип VPN-протокола","Антивирусная программа","Метод сжатия данных","Система доменных имён"], c:0, e:"ECH шифрует ClientHello, скрывая SNI от DPI. Это новейшая технология, затрудняющая блокировку по доменному имени." },
+  { q:"Что такое QUIC?", o:["Транспортный протокол на UDP","Тип VPN-сервера","Антивирусная утилита","Метод шифрования данных","Система доменных имён"], c:0, e:"QUIC — быстрый транспортный протокол поверх UDP, лежащий в основе HTTP/3. Используется в Hysteria2 и других VPN-протоколах." },
+  { q:"Что такое MTU?", o:["Максимальный размер пакета","Минимальный блок передачи","Мультитуннельная утилита","Основной блок трафика","Максимальное использование туннеля"], c:0, e:"MTU — максимальный размер пакета, передаваемого без фрагментации. Неправильный MTU вызывает проблемы с соединением в VPN." },
+  { q:"Что такое MTU-проблема в VPN?", o:["Пакеты фрагментируются и теряются","VPN не запускается вообще","Скорость падает до нуля","IP-адрес не меняется","DNS не работает совсем"], c:0, e:"Из-за дополнительных заголовков VPN пакеты могут превышать MTU и фрагментироваться. Это вызывает потерю пакетов и проблемы с соединением." },
+  { q:"Что такое Kill Switch?", o:["Отключение интернета при обрыве","Кнопка выключения компьютера","Метод сжатия трафика","Тип шифрования данных","Антивирусная программа"], c:0, e:"Kill Switch блокирует весь интернет-трафик, если VPN-соединение обрывается. Это предотвращает утечку реального IP-адреса." },
+  { q:"Что такое obfs4?", o:["Маскировка трафика Tor","Тип VPN-сервера","Антивирусная утилита","Метод сжатия данных","Система доменных имён"], c:0, e:"obfs4 — pluggable transport для Tor, делающий трафик неотличимым от случайного шума. Используется для обхода DPI." },
+  { q:"Что такое мостовой узел Tor?", o:["Скрытый входной узел","Тип VPN-сервера","Метод шифрования","Антивирусная программа","Система доменных имён"], c:0, e:"Мосты — непубличные входные узлы Tor. Они помогают подключаться к сети Tor в странах, где она заблокирована." },
+  { q:"Что такое прокси-сервер?", o:["Посредник между клиентом и сетью","Тип антивируса","Метод шифрования данных","Система доменных имён","Программа для скачивания"], c:0, e:"Прокси-сервер принимает запросы клиента и пересылает их от своего имени. Он скрывает IP клиента, но не шифрует трафик так, как VPN." },
+  { q:"Чем отличается прокси от VPN?", o:["VPN шифрует весь трафик","Прокси безопаснее VPN","VPN работает только в браузере","Прокси быстрее в десять раз","Это одно и то же"], c:0, e:"VPN шифрует весь трафик устройства и меняет IP на уровне системы. Прокси работает на уровне приложения и не шифрует данные." },
+  { q:"Что такое SOCKS5?", o:["Протокол прокси с UDP","Тип VPN-туннеля","Антивирусная утилита","Метод шифрования данных","Система доменных имён"], c:0, e:"SOCKS5 — протокол прокси, поддерживающий TCP и UDP, а также аутентификацию. Часто используется в связке с Shadowsocks." },
+  { q:"Что такое цепочка прокси?", o:["Несколько прокси подряд","Тип VPN-сервера","Метод шифрования данных","Антивирусная программа","Система доменных имён"], c:0, e:"Chain Proxy — прохождение трафика через несколько прокси-серверов подряд. Это повышает анонимность, но снижает скорость." },
+  { q:"Что такое Reverse Proxy?", o:["Прокси перед сервером","Тип VPN-туннеля","Антивирусная утилита","Метод шифрования","Система доменных имён"], c:0, e:"Reverse Proxy принимает запросы от клиентов и перенаправляет их на внутренние серверы. Используется для балансировки и защиты." },
+  { q:"Что такое Nginx?", o:["Веб-сервер и reverse proxy","Тип VPN-сервера","Антивирусная программа","Метод шифрования данных","Система доменных имён"], c:0, e:"Nginx — популярный веб-сервер и reverse proxy. Часто используется для маскировки VPN-трафика под обычный веб-сайт." },
+  { q:"Что такое Caddy?", o:["Веб-сервер с авто-HTTPS","Тип VPN-сервера","Антивирусная утилита","Метод шифрования данных","Система доменных имён"], c:0, e:"Caddy — веб-сервер, автоматически получающий и обновляющий TLS-сертификаты. Удобен для быстрой настройки HTTPS." },
+  { q:"Что такое TLS-сертификат?", o:["Документ о подлинности сайта","Тип VPN-туннеля","Антивирусная программа","Метод сжатия данных","Система доменных имён"], c:0, e:"TLS-сертификат выдаётся удостоверяющим центром и подтверждает, что сайт действительно тот, за кого себя выдаёт. Используется для шифрования HTTPS." },
+  { q:"Что такое самоподписанный сертификат?", o:["Подписан самим владельцем","Выдан компанией Google","Тип VPN-туннеля","Антивирусная утилита","Метод шифрования"], c:0, e:"Самоподписанный сертификат не подтверждён удостоверяющим центром. Браузеры показывают предупреждение, но в VPN он может использоваться для маскировки." },
+  { q:"Что такое SNI-фильтрация?", o:["Блокировка по имени сервера","Тип VPN-сервера","Антивирусная программа","Метод сжатия данных","Система доменных имён"], c:0, e:"SNI-фильтрация — блокировка соединений на основе SNI, передаваемого в открытом виде при TLS-рукопожатии. Обходится с помощью ECH или REALITY." },
+  { q:"Что такое Domain Fronting?", o:["Маскировка под другой домен","Тип VPN-сервера","Антивирусная утилита","Метод шифрования данных","Система доменных имён"], c:0, e:"Domain Fronting — техника, при которой SNI указывает на легальный домен, а реальный запрос идёт к другому серверу. Используется для обхода цензуры." },
+  { q:"Что такое CDN Fronting?", o:["Использование CDN для VPN","Тип VPN-протокола","Антивирусная программа","Метод сжатия данных","Система доменных имён"], c:0, e:"CDN Fronting — размещение VPN-сервера за CDN, например Cloudflare. Трафик идёт к IP CDN, а не к реальному серверу." },
+  { q:"Что такое трафик-шейпинг?", o:["Ограничение скорости провайдером","Тип VPN-туннеля","Антивирусная утилита","Метод шифрования данных","Система доменных имён"], c:0, e:"Трафик-шейпинг — замедление определённых типов трафика провайдером. Часто применяется к VPN и торрентам." },
+  { q:"Что такое QoS?", o:["Приоритизация трафика","Тип VPN-сервера","Антивирусная программа","Метод шифрования данных","Система доменных имён"], c:0, e:"QoS — механизм приоритизации трафика. Позволяет выделить приоритет для VoIP или игр, ограничивая другие типы данных." },
+  { q:"Что такое NAT?", o:["Преобразование адресов","Тип VPN-туннеля","Антивирусная утилита","Метод шифрования данных","Система доменных имён"], c:0, e:"NAT позволяет нескольким устройствам выходить в интернет через один публичный IP. Используется в домашних роутерах." },
+  { q:"Что такое CGNAT?", o:["NAT на стороне провайдера","Тип VPN-сервера","Антивирусная программа","Метод сжатия данных","Система доменных имён"], c:0, e:"CGNAT — NAT на уровне провайдера. Многие абоненты используют один публичный IP, что усложняет работу VPN-серверов." },
+  { q:"Что такое статический IP?", o:["Постоянный IP-адрес","Тип VPN-туннеля","Антивирусная утилита","Метод шифрования данных","Система доменных имён"], c:0, e:"Статический IP не меняется. Удобен для серверов, но менее анонимен, чем динамический." },
+  { q:"Что такое динамический IP?", o:["IP, меняющийся при подключении","Тип VPN-сервера","Антивирусная программа","Метод сжатия данных","Система доменных имён"], c:0, e:"Динамический IP выдаётся провайдером на время сессии. При переподключении он может измениться." },
+  { q:"Что такое IPv6?", o:["Версия IP со 128 битами","Тип VPN-туннеля","Антивирусная утилита","Метод шифрования данных","Система доменных имён"], c:0, e:"IPv6 использует 128-битные адреса вместо 32-битных в IPv4. Решает проблему нехватки IP-адресов." },
+  { q:"Чем опасен IPv6 для VPN?", o:["Утечка реального адреса","Он замедляет работу VPN","Он удаляет файлы","Он блокирует VPN","Он не поддерживается"], c:0, e:"Многие VPN-клиенты не поддерживают IPv6. Если он не отключён, трафик может идти напрямую, раскрывая реальный IP." },
+  { q:"Что такое WebRTC-утечка?", o:["Утечка IP через браузер","Тип VPN-туннеля","Антивирусная утилита","Метод шифрования данных","Система доменных имён"], c:0, e:"WebRTC может раскрыть реальный IP-адрес даже при включённом VPN. Для защиты нужно отключать WebRTC в браузере." },
+  { q:"Что такое DoH?", o:["DNS-запросы через HTTPS","Тип VPN-сервера","Антивирусная программа","Метод сжатия данных","Система доменных имён"], c:0, e:"DoH шифрует DNS-запросы, предотвращая их перехват и подмену провайдером. Используется в современных браузерах." },
+  { q:"Что такое DoT?", o:["DNS-запросы через TLS","Тип VPN-туннеля","Антивирусная утилита","Метод сжатия данных","Система доменных имён"], c:0, e:"DoT шифрует DNS-запросы через TLS на порту 853. Альтернатива DoH, часто используется в мобильных ОС." },
+  { q:"Что такое DNSSEC?", o:["Защита DNS от подмены","Тип VPN-сервера","Антивирусная программа","Метод сжатия данных","Система доменных имён"], c:0, e:"DNSSEC добавляет криптографические подписи к DNS-ответам, защищая от подмены и атак типа cache poisoning." },
+  { q:"Что такое Tor?", o:["Анонимная сеть с шифрованием","Тип VPN-сервера","Антивирусная утилита","Метод сжатия данных","Система доменных имён"], c:0, e:"Tor направляет трафик через три узла, каждый из которых снимает свой слой шифрования. Обеспечивает высокую анонимность, но низкую скорость." },
+  { q:"Чем отличается Tor от VPN?", o:["Tor обеспечивает анонимность","Tor быстрее VPN","VPN анонимнее Tor","Tor не шифрует трафик","Это одно и то же"], c:0, e:"Tor скрывает и IP, и маршрут, обеспечивая анонимность. VPN скрывает IP, но провайдер VPN знает ваш реальный адрес." },
+  { q:"Что такое Onion Routing?", o:["Многослойное шифрование","Тип VPN-туннеля","Антивирусная утилита","Метод сжатия данных","Система доменных имён"], c:0, e:"Onion Routing — шифрование данных несколькими слоями, каждый узел снимает свой слой. Основа сети Tor." },
+  { q:"Что такое VPN Chain?", o:["Несколько VPN подряд","Тип VPN-сервера","Антивирусная программа","Метод сжатия данных","Система доменных имён"], c:0, e:"VPN Chain — последовательное подключение через несколько VPN-серверов. Повышает анонимность, но снижает скорость." },
+  { q:"Что такое Double VPN?", o:["Два VPN-сервера подряд","Тип VPN-туннеля","Антивирусная утилита","Метод сжатия данных","Система доменных имён"], c:0, e:"Double VPN — трафик проходит через два VPN-сервера, шифруясь дважды. Используется для повышенной анонимности." },
+  { q:"Что такое Multi-Hop VPN?", o:["Несколько серверов в цепочке","Тип VPN-сервера","Антивирусная программа","Метод сжатия данных","Система доменных имён"], c:0, e:"Multi-Hop VPN — трафик проходит через несколько серверов в разных странах. Максимальная анонимность, но высокая задержка." },
+  { q:"Что такое обфускация?", o:["Маскировка VPN-трафика","Тип VPN-сервера","Антивирусная утилита","Метод сжатия данных","Система доменных имён"], c:0, e:"Обфускация делает VPN-трафик похожим на обычный HTTPS или другой протокол, чтобы обойти DPI." },
+  { q:"Что такое Stealth VPN?", o:["VPN с обфускацией","Тип VPN-сервера","Антивирусная программа","Метод сжатия данных","Система доменных имён"], c:0, e:"Stealth VPN использует обфускацию и маскировку, чтобы провайдер не мог определить, что вы используете VPN." },
+  { q:"Что такое WireGuard?", o:["Быстрый VPN-протокол","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"WireGuard — современный VPN-протокол с минимальным кодом и высокой скоростью. Прост в настройке, но не имеет встроенной обфускации." },
+  { q:"Что такое OpenVPN?", o:["VPN-протокол с открытым кодом","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"OpenVPN — гибкий VPN-протокол с открытым исходным кодом. Работает на TCP и UDP, поддерживает TLS-шифрование." },
+  { q:"Что такое IKEv2/IPsec?", o:["VPN-протокол для мобильных","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"IKEv2/IPsec — быстрый и стабильный VPN-протокол, хорошо работающий при переключении между Wi-Fi и мобильной сетью." },
+  { q:"Что такое L2TP/IPsec?", o:["VPN-протокол с IPsec","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"L2TP сам по себе не шифрует трафик. Шифрование обеспечивается IPsec. Считается устаревшим и медленным." },
+  { q:"Что такое PPTP?", o:["Устаревший VPN-протокол","Современный быстрый VPN","Тип антивируса","Метод сжатия данных","Система доменных имён"], c:0, e:"PPTP — устаревший VPN-протокол со слабым шифрованием. Не рекомендуется к использованию из-за уязвимостей." },
+  { q:"Что такое SSTP?", o:["VPN-протокол от Microsoft","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"SSTP — VPN-протокол Microsoft, работающий поверх HTTPS на порту 443. Хорошо обходит блокировки, но работает только на Windows." },
+  { q:"Что такое SoftEther?", o:["Многофункциональный VPN-сервер","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"SoftEther — открытый VPN-сервер, поддерживающий множество протоколов и обфускацию. Популярен в корпоративной среде." },
+  { q:"Что такое Outline?", o:["VPN-клиент на базе Shadowsocks","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Outline — открытый VPN-клиент от Google на базе Shadowsocks. Прост в настройке, используется для обхода цензуры." },
+  { q:"Что такое Clash?", o:["Прокси-клиент с правилами","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Clash — прокси-клиент с гибкой настройкой правил маршрутизации. Поддерживает Shadowsocks, VMess, Trojan и другие протоколы." },
+  { q:"Что такое Sing-box?", o:["Универсальный прокси-клиент","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Sing-box — современный прокси-клиент, поддерживающий все актуальные протоколы. Пришёл на смену Clash и Xray." },
+  { q:"Что такое Xray-core?", o:["Ядро для VLESS и XHTTP","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Xray-core — форк V2Ray с новыми протоколами VLESS, XTLS, XHTTP, REALITY. Основа большинства современных VPN-клиентов." },
+  { q:"Что такое V2Ray?", o:["Платформа для прокси","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"V2Ray — платформа для обхода блокировок, поддерживающая VMess, VLESS, Shadowsocks и другие протоколы. Предшественник Xray." },
+  { q:"Что такое VMess?", o:["Протокол с шифрованием","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"VMess — протокол V2Ray с встроенным шифрованием. Требует синхронизации времени между клиентом и сервером." },
+  { q:"Что такое VLESS?", o:["Облегчённый протокол","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"VLESS — облегчённый протокол Xray. Не имеет встроенного шифрования, полагается на транспортный уровень TLS или REALITY." },
+  { q:"Что такое Trojan-Go?", o:["Реализация Trojan на Go","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Trojan-Go — реализация протокола Trojan на языке Go. Поддерживает мультиплексирование и маскировку под HTTPS." },
+  { q:"Что такое NaiveProxy?", o:["Прокси под Chrome-трафик","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"NaiveProxy использует сетевой стек Chrome для маскировки трафика. Практически неотличим от обычного браузера для DPI." },
+  { q:"Что такое Brook?", o:["Прокси-протокол с обфускацией","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Brook — простой прокси-протокол с обфускацией. Используется для обхода блокировок в Китае и Иране." },
+  { q:"Что такое TUIC?", o:["Протокол на базе QUIC","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"TUIC — протокол на базе QUIC, похожий на Hysteria. Обеспечивает низкую задержку и обход DPI." },
+  { q:"Что такое MASQUE?", o:["Маскировка под HTTP/3","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"MASQUE — новый стандарт маскировки трафика под HTTP/3. Используется в некоторых современных VPN." },
+  { q:"Что такое QUIC-фрагментация?", o:["Разбиение QUIC-пакетов","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"QUIC-фрагментация разбивает пакеты на части, чтобы DPI не мог собрать полный запрос и заблокировать его." },
+  { q:"Что такое TCP-фрагментация?", o:["Разбиение TCP-пакетов","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"TCP-фрагментация разбивает пакеты так, чтобы DPI не мог прочитать SNI или другие заголовки. Используется в GoodbyeDPI." },
+  { q:"Что такое GoodbyeDPI?", o:["Утилита обхода DPI","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"GoodbyeDPI — утилита, обходящая DPI с помощью фрагментации пакетов. Не шифрует трафик, но помогает открывать заблокированные сайты." },
+  { q:"Что такое Zapret?", o:["Утилита обхода DPI","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Zapret — утилита, обходящая DPI через фрагментацию и подмену пакетов. Популярна в России для обхода блокировок." },
+  { q:"Что такое ByeDPI?", o:["Утилита обхода DPI на Android","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"ByeDPI — утилита для обхода DPI на Android. Работает без root, используя локальный VPN-интерфейс." },
+  { q:"Что такое DPI-обход фрагментацией?", o:["Разбиение пакетов для DPI","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"DPI-обход через фрагментацию разбивает пакеты на части. DPI не может собрать полный запрос и пропускает трафик." },
+  { q:"Что такое Fake TLS?", o:["Имитация TLS-рукопожатия","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Fake TLS имитирует TLS-рукопожатие, но не шифрует данные. Используется для обхода DPI, но не обеспечивает безопасность." },
+  { q:"Что такое Reality в Xray?", o:["Маскировка под реальный сайт","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"REALITY заимствует TLS-сертификат реального сайта. DPI видит легитимное соединение и не блокирует его." },
+  { q:"Что такое XTLS Vision?", o:["Режим XTLS без двойного шифрования","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"XTLS Vision — режим, устраняющий двойное шифрование TLS-in-TLS. Повышает скорость и снижает нагрузку на CPU." },
+  { q:"Что такое Flow в Xray?", o:["Параметр режима XTLS","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Flow — параметр в конфигурации Xray, управляющий режимом XTLS, например xtls-rprx-vision." },
+  { q:"Что такое sniffing в Xray?", o:["Анализ трафика для маршрутизации","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Sniffing позволяет Xray определять домен из трафика и маршрутизировать его по правилам, даже если DNS не используется." },
+  { q:"Что такое routing в Xray?", o:["Правила маршрутизации трафика","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Routing в Xray позволяет направлять трафик по правилам: одни сайты — через VPN, другие — напрямую." },
+  { q:"Что такое inbound и outbound?", o:["Входящие и исходящие соединения","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Inbound — входящее соединение от клиента к Xray, outbound — исходящее от Xray к серверу или напрямую." },
+  { q:"Что такое fallback в Xray?", o:["Перенаправление трафика","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Fallback позволяет перенаправлять трафик на другой сервер, например на веб-сайт, если клиент не прошёл аутентификацию." },
+  { q:"Что такое сайт-заглушка в VPN?", o:["Сервер отдаёт обычный сайт","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"При подключении без правильного пароля сервер отдаёт обычный сайт. DPI видит легитимный веб-ресурс." },
+  { q:"Что такое панель 3x-ui?", o:["Веб-интерфейс управления VPN","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Панели вроде 3x-ui и Marzban позволяют управлять пользователями, протоколами и трафиком VPN-сервера через веб-интерфейс." },
+  { q:"Что такое лимит трафика в VPN?", o:["Ограничение объёма данных","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Лимит трафика — максимальный объём данных, который пользователь может передать через VPN. Настраивается в панели управления." },
+  { q:"Что такое лимит устройств в VPN?", o:["Ограничение числа подключений","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Лимит устройств ограничивает количество одновременных подключений к одному VPN-аккаунту." },
+  { q:"Что такое подписка в VPN?", o:["Ссылка для обновления конфигурации","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Подписка — URL, по которому клиент получает актуальные конфигурации серверов. Удобно для управления множеством устройств." },
+  { q:"Что такое VLESS Reality?", o:["Связка VLESS и REALITY","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"VLESS Reality — самая популярная связка: VLESS обеспечивает лёгкость, REALITY — маскировку под реальный TLS-сайт." },
+  { q:"Что такое XHTTP + Reality?", o:["Связка XHTTP и REALITY","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"XHTTP + Reality — мощная связка: REALITY маскирует рукопожатие, XHTTP — сам поток данных под обычные HTTP-запросы." },
+  { q:"Что такое Sing-box + Reality?", o:["Клиент с поддержкой REALITY","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Sing-box поддерживает REALITY и другие современные протоколы. Удобен для настройки на роутерах и мобильных устройствах." },
+  { q:"Что такое Hiddify?", o:["VPN-клиент на базе Sing-box","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Hiddify — удобный клиент на базе Sing-box. Поддерживает все актуальные протоколы и подписки." },
+  { q:"Что такое NekoBox?", o:["VPN-клиент для Android","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"NekoBox — популярный Android-клиент с поддержкой всех современных протоколов и гибкой настройкой маршрутизации." },
+  { q:"Что такое v2rayNG?", o:["Клиент V2Ray для Android","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"v2rayNG — один из самых популярных Android-клиентов для V2Ray и Xray. Поддерживает VLESS, VMess, Trojan и другие." },
+  { q:"Что такое Streisand?", o:["VPN-клиент для iOS","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Streisand — популярный iOS-клиент на базе Xray. Поддерживает VLESS, Reality, XHTTP и другие протоколы." },
+  { q:"Что такое Shadowrocket?", o:["Платный VPN-клиент для iOS","Тип антивируса","Метод сжатия данных","Система доменных имён","Веб-сервер"], c:0, e:"Shadowrocket — платный iOS-клиент с поддержкой множества протоколов. Считается одним из лучших на платформе." }
+];
+
+/* ============================================================
+   ЛОГИКА
+   ============================================================ */
+let questions = [];
+let currentIndex = 0;
+let score = 0;
+let userAnswers = [];
+let total = 0;
+
+const $ = id => document.getElementById(id);
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function prepareQuestions() {
+  questions = RAW_QUESTIONS.map(item => {
+    const correctText = item.o[item.c];
+    const shuffled = shuffle(item.o);
+    const newCorrectIndex = shuffled.indexOf(correctText);
+    return { q: item.q, o: shuffled, c: newCorrectIndex, e: item.e };
+  });
+  total = questions.length;
+}
+
+function startQuiz() {
+  prepareQuestions();
+  currentIndex = 0;
+  score = 0;
+  userAnswers = [];
+  $('startScreen').classList.add('hidden');
+  $('quizScreen').classList.remove('hidden');
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const q = questions[currentIndex];
+  $('qCounter').textContent = `Вопрос ${currentIndex + 1} / ${total}`;
+  $('scoreDisplay').textContent = `Баллы: ${score}`;
+  $('progressFill').style.width = `${(currentIndex / total) * 100}%`;
+  $('qText').textContent = q.q;
+  $('expText').textContent = '';
+  $('explanation').style.display = 'none';
+  $('nextBtn').classList.add('hidden');
+
+  const container = $('options');
+  container.innerHTML = '';
+  q.o.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.style.animationDelay = `${i * 0.05}s`;
+    div.innerHTML = `
+      <span class="opt-prefix">
+        <svg viewBox="0 0 24 24" fill="none" stroke="url(#gradOpt${i})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="gradOpt${i}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="100%" stop-color="#7a7a85"/>
+            </linearGradient>
+          </defs>
+          <circle cx="12" cy="12" r="10"/>
+        </svg>
+        ${String.fromCharCode(65 + i)}.
+      </span>
+      <span>${opt}</span>
+    `;
+    div.onclick = () => selectAnswer(i, div);
+    container.appendChild(div);
+  });
+}
+
+function selectAnswer(idx, el) {
+  const q = questions[currentIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o => o.classList.add('disabled'));
+
+  let isCorrect = false;
+  if (idx === q.c) {
+    el.classList.add('correct');
+    score++;
+    isCorrect = true;
+    // заменяем иконку на галочку
+    const prefix = el.querySelector('.opt-prefix');
+    prefix.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-pulse">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      ${String.fromCharCode(65 + idx)}.
+    `;
+  } else {
+    el.classList.add('wrong');
+    opts[q.c].classList.add('correct');
+    // крестик у неправильного
+    const prefix = el.querySelector('.opt-prefix');
+    prefix.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="#ff1744" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-pulse">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+      ${String.fromCharCode(65 + idx)}.
+    `;
+    // галочка у правильного
+    const correctPrefix = opts[q.c].querySelector('.opt-prefix');
+    correctPrefix.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-pulse">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      ${String.fromCharCode(65 + q.c)}.
+    `;
+  }
+
+  $('scoreDisplay').textContent = `Баллы: ${score}`;
+  $('expText').textContent = q.e;
+  $('explanation').style.display = 'block';
+  $('nextBtn').classList.remove('hidden');
+
+  userAnswers.push({
+    q: q.q,
+    selected: q.o[idx],
+    correct: q.o[q.c],
+    isCorrect: isCorrect,
+    exp: q.e
+  });
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex < total) {
+    loadQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  $('quizScreen').classList.add('hidden');
+  $('resultScreen').classList.remove('hidden');
+  $('finalScore').textContent = `${score}/${total}`;
+  const pct = (score / total) * 100;
+  let rank = '';
+  let rankEmoji = '';
+  if (pct <= 20) { rank = 'Ужасно'; rankEmoji = '😱'; }
+  else if (pct <= 40) { rank = 'Плохо'; rankEmoji = '😐'; }
+  else if (pct <= 60) { rank = 'Средне'; rankEmoji = '🤔'; }
+  else if (pct <= 75) { rank = 'Нормально'; rankEmoji = '🙂'; }
+  else if (pct <= 90) { rank = 'Отлично'; rankEmoji = '😎'; }
+  else { rank = 'Прекрасно'; rankEmoji = '🤩'; }
+  $('finalRankText').textContent = rank + ' ' + rankEmoji;
+
+  const list = $('reviewList');
+  list.innerHTML = '';
+  userAnswers.forEach((a, i) => {
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    div.style.animationDelay = `${Math.min(i * 0.02, 1)}s`;
+    div.innerHTML = `
+      <div class="review-q">
+        <svg viewBox="0 0 24 24" fill="none" stroke="url(#gradRq${i})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="gradRq${i}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="100%" stop-color="#7a7a85"/>
+            </linearGradient>
+          </defs>
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        ${i + 1}. ${a.q}
+      </div>
+      <div class="review-a ${a.isCorrect ? 'correct' : 'wrong'}">
+        ${a.isCorrect 
+          ? `<svg viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>` 
+          : `<svg viewBox="0 0 24 24" fill="none" stroke="#ff1744" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`}
+        Ваш ответ: ${a.selected}
+      </div>
+      ${!a.isCorrect ? `
+      <div class="review-a correct">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Правильный ответ: ${a.correct}
+      </div>` : ''}
+      <div class="review-exp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="url(#gradExp${i})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="gradExp${i}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="100%" stop-color="#7a7a85"/>
+            </linearGradient>
+          </defs>
+          <path d="M9 18h6"/><path d="M10 22h4"/>
+          <path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>
+        </svg>
+        <span>${a.exp}</span>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  prepareQuestions();
+  total = questions.length;
+});
+</script>
+
+<script>
+/* Lightweight ambient particles: restrained, responsive and pause-aware. */
+(function(){
+  const canvas=document.getElementById('ambientCanvas');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d',{alpha:true});
+  if(!ctx) return;
+  let w=0,h=0,dpr=1,particles=[],raf=0;
+  const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function resize(){
+    dpr=Math.min(window.devicePixelRatio||1,1.5);
+    w=window.innerWidth; h=window.innerHeight;
+    canvas.width=Math.round(w*dpr); canvas.height=Math.round(h*dpr);
+    canvas.style.width=w+'px'; canvas.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const count=Math.min(75,Math.max(24,Math.floor(w*h/18000)));
+    particles=Array.from({length:count},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.4+.25,v:Math.random()*.22+.05,a:Math.random()*.48+.12,phase:Math.random()*6.28}));
+  }
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(const p of particles){
+      p.y-=p.v;
+      p.phase+=.012;
+      if(p.y < -4){p.y=h+4;p.x=Math.random()*w;}
+      ctx.beginPath();ctx.arc(p.x+Math.sin(p.phase)*5,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(220,229,248,'+(p.a*(.65+.35*Math.sin(p.phase))+0.08)+')';ctx.fill();
+    }
+    if(!reduced&&!document.hidden) raf=requestAnimationFrame(draw);
+  }
+  resize(); draw();
+  window.addEventListener('resize',()=>{cancelAnimationFrame(raf);resize();draw();},{passive:true});
+  document.addEventListener('visibilitychange',()=>{cancelAnimationFrame(raf);if(!document.hidden)draw();});
+})();
+</script>
+
+</body>
+</html>
