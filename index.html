@@ -128,6 +128,13 @@
   .screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
+  /* Интро: чёрный оверлей поверх всего — SyntaxHyperSoft.mp4 → чёрный экран → Loneliness.gif */
+  #screen-intro { position: fixed; inset: 0; z-index: 100; background: #000; display: none; align-items: center; justify-content: center; }
+  #screen-intro.active { display: flex; }
+  #introVideo { width: 100%; height: 100%; object-fit: contain; background: #000; }
+  #introVideo[hidden], #introGif[hidden] { display: none; }
+  #introGif { max-width: min(92vw, 520px); max-height: 85vh; object-fit: contain; }
+
   .loading-screen { text-align: center; padding: 40px 20px; }
   .logo-icon { width: 80px; height: 80px; margin: 0 auto 26px; color: #ddd; animation: pulse 2s ease-in-out infinite; filter: drop-shadow(0 0 18px rgba(255,255,255,0.15)); }
   @keyframes pulse { 0%,100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.06); } }
@@ -343,6 +350,10 @@
 </div>
 
 <canvas id="rainFront"></canvas>
+<div id="screen-intro">
+  <video id="introVideo" playsinline webkit-playsinline preload="auto" hidden></video>
+  <img id="introGif" alt="" hidden>
+</div>
 <audio id="bgMusic" loop preload="auto"></audio>
 
 <script>
@@ -388,7 +399,7 @@ async function boot() {
   const status = document.getElementById('loadStatus');
   const fill = document.getElementById('loadFill');
   let cached = false;
-  const hardTimeout = setTimeout(finishBoot, 6000);
+  const hardTimeout = 0; /* раньше: принудительный переход через 6 сек — теперь ждём полного скачивания */
   try {
     status.textContent = 'Проверка IndexedDB...';
     let db = null;
@@ -440,7 +451,103 @@ async function boot() {
     fill.style.width = '100%';
   }
   clearTimeout(hardTimeout);
-  setTimeout(finishBoot, cached ? 400 : 800);
+  setTimeout(prepareIntro, cached ? 400 : 800);
+}
+
+/* ================= ИНТРО: SyntaxHyperSoft.mp4 → чёрный → Loneliness.gif → тест ================= */
+const INTRO_MEDIA = [
+  { key: 'introVideo', url: 'https://raw.githubusercontent.com/SyntexHyperSoft/SyntexHyperSoft-Database/refs/heads/main/SyntaxHyperSoft.mp4', type: 'video/mp4', label: 'видео' },
+  { key: 'introGif',   url: 'https://raw.githubusercontent.com/SyntexHyperSoft/SyntexHyperSoft-Database/refs/heads/main/Loneliness.gif', type: 'image/gif', label: 'анимация' }
+];
+const mediaURL = {};
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function prepareIntro() {
+  const status = document.getElementById('loadStatus');
+  const fill = document.getElementById('loadFill');
+  let d = null;
+  try { d = await openDB(); } catch (e) { d = null; }
+
+  /* Что уже лежит в IndexedDB — берём оттуда, остальное докачиваем под экраном «Загружаем локальный AI» */
+  const missing = [];
+  for (const m of INTRO_MEDIA) {
+    let blob = null;
+    if (d) { try { blob = await dbGet(d, m.key); } catch (e) { blob = null; } }
+    if (blob && blob.size > 1000) mediaURL[m.key] = URL.createObjectURL(blob);
+    else missing.push(m);
+  }
+
+  for (const m of missing) {
+    fill.style.width = '0%';
+    status.textContent = 'Скачиваем ' + m.label + ': 0%';
+    try {
+      const resp = await fetch(m.url);
+      if (!resp.ok) throw new Error('bad status');
+      const total = +resp.headers.get('Content-Length') || 0;
+      const reader = resp.body.getReader();
+      const chunks = []; let got = 0;
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value); got += value.length;
+        if (total) { const pct = Math.round(got / total * 100); fill.style.width = pct + '%'; status.textContent = 'Скачиваем ' + m.label + ': ' + pct + '%'; }
+      }
+      const blob = new Blob(chunks, { type: m.type });
+      mediaURL[m.key] = URL.createObjectURL(blob);
+      if (d) { try { await dbSet(d, m.key, blob); } catch (e) {} }
+    } catch (e) {
+      mediaURL[m.key] = m.url; /* нет сети и нет кэша — проигрываем напрямую */
+    }
+  }
+  fill.style.width = '100%';
+  status.textContent = missing.length ? 'Сохранено в память · готово' : 'Найдено в памяти · готово';
+  setTimeout(startIntro, missing.length ? 400 : 200);
+}
+
+let introStarted = false;
+function startIntro() {
+  if (introStarted) return;
+  introStarted = true;
+  bootFinished = true;
+  const ov = document.getElementById('screen-intro');
+  const v = document.getElementById('introVideo');
+  const g = document.getElementById('introGif');
+  ov.classList.add('active');
+
+  const playVideo = () => new Promise(res => {
+    if (!mediaURL.introVideo) return res();
+    v.onended = res; v.onerror = res;
+    v.style.display = 'block'; g.style.display = 'none';
+    v.src = mediaURL.introVideo;
+    v.muted = false;
+    /* Страховка: если окончание видео не пришло, переходим по длительности */
+    v.onloadedmetadata = () => { if (isFinite(v.duration)) setTimeout(res, v.duration * 1000 + 1500); };
+    const p = v.play();
+    /* Браузер может не дать звук без жеста пользователя — тогда играем без звука */
+    if (p) p.catch(() => { v.muted = true; v.play().catch(res); });
+  });
+
+  /* Гифка показывается только после полной загрузки картинки */
+  const loadGif = () => new Promise(res => {
+    if (!mediaURL.introGif) return res(false);
+    const probe = new Image();
+    probe.onload = () => res(true);
+    probe.onerror = () => res(false);
+    probe.src = mediaURL.introGif;
+  });
+
+  (async () => {
+    await playVideo();              // видео играет до конца
+    await sleep(2000);              // последний кадр замирает на 2 сек
+    v.style.display = 'none'; g.style.display = 'none';
+    await sleep(2000);              // чёрный экран
+    const gifOk = await loadGif();
+    if (gifOk) { g.src = mediaURL.introGif; g.style.display = 'block'; }
+    await sleep(2000);              // гифка висит 2 сек
+    ov.classList.remove('active');
+    g.style.display = 'none'; g.removeAttribute('src');
+    goTo('screen-welcome');         // дальше — сам тест
+  })();
 }
 
 /* ================= ДОЖДЬ: СЦЕНА, КАПЛИ, ЛУЖИ ================= */
