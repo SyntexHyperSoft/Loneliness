@@ -357,7 +357,10 @@
 
 <audio id="bgMusic" loop preload="auto"></audio>
 
-<script src="https://syntexhypersoft.github.io/SyntexHyperSoft-Database/humancheck.js" onerror="console.error('humancheck.js не загрузился, пропускаю проверку')"></script>
+<script>
+  // humancheck.js грузится с GitHub Pages каждый раз заново: уникальный адрес обходит кэш браузера и CDN.
+  document.write('<script src="https://syntexhypersoft.github.io/SyntexHyperSoft-Database/humancheck.js?t=' + Date.now() + '" onerror="console.error(&#39;humancheck.js не загрузился, пропускаю проверку&#39;)"><\/script>');
+</script>
 <script>
 const rand = (a, b) => Math.random() * (b - a) + a;
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
